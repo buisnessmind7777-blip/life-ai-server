@@ -42,7 +42,7 @@ app.post("/api/chat", async (req, res) => {
         res.flushHeaders();
 
         const stream = await client.responses.create({
-            model: "gpt-5.6",
+            model: "gpt-5.6-luna",
             input: message,
             stream: true
         });
