@@ -5,14 +5,20 @@ const app = express();
 
 app.use(express.json());
 
-// Разрешаем запросы от сайта Life AI
+// Разрешаем Life AI обращаться к серверу
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+
     next();
 });
 
+// OpenAI
 const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
@@ -25,48 +31,40 @@ app.get("/", (req, res) => {
     });
 });
 
-// AI чат
+// AI CHAT
 app.post("/api/chat", async (req, res) => {
+
     try {
+
         const { message } = req.body;
 
-        if (!message) {
+        if (!message || typeof message !== "string") {
             return res.status(400).json({
                 error: "Message is required"
             });
         }
 
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-        res.flushHeaders();
-
         const response = await client.responses.create({
-    model: "gpt-5.6",
-    input: message
-});
-
-res.json({
-    answer: response.output_text
-});
+            model: "gpt-5.6-luna",
+            input: message
         });
 
-        
+        res.json({
+            answer: response.output_text
+        });
+
+    } catch (error) {
+
         console.error("AI ERROR:", error);
 
-        if (!res.headersSent) {
-            res.status(500).json({
-                error: "AI request failed"
-            });
-        } else {
-            res.write(`data: ${JSON.stringify({
-                error: "AI request failed"
-            })}\n\n`);
-            res.end();
-        }
+        res.status(500).json({
+            error: "Не удалось получить ответ от AI"
+        });
     }
 });
 
+
+// PORT для Render
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
