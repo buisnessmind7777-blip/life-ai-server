@@ -89,9 +89,9 @@ app.post("/api/chat", async (req, res) => {
             text === "кто ты?" ||
             text === "как тебя зовут" ||
             text === "как тебя зовут?" ||
-            text.includes("ты LifeAI") ||
-            text.includes("ты лайфаи") ||
-            text.includes("ты аи")
+            text.includes("ты Life AI") ||
+            text.includes("ты лайф аи") ||
+            text.includes("ты Life AI")
         ) {
 
             return res.json({
