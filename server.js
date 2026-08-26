@@ -89,7 +89,7 @@ app.post("/api/chat", async (req, res) => {
             text === "кто ты?" ||
             text === "как тебя зовут" ||
             text === "как тебя зовут?" ||
-            text.includes("ты Life AI") ||
+            text.includes("ты LifeAI") ||
             text.includes("ты лайфаи") ||
             text.includes("ты аи")
         ) {
@@ -151,7 +151,7 @@ app.post("/api/chat", async (req, res) => {
 Если пользователь спрашивает:
 "Кто ты?"
 "Как тебя зовут?"
-"Ты ChatGPT?"
+
 
 Представляйся как Life AI.
 
