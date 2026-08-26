@@ -75,19 +75,19 @@ app.post("/api/chat", async (req, res) => {
         });
 
 
-    } catch (error) {
+    catch (error) {
 
-        console.error(
-            "AI ERROR:",
-            error
-        );
+    console.error("========== AI ERROR ==========");
+    console.error(error);
+    console.error("Message:", error.message);
+    console.error("Status:", error.status);
+    console.error("==============================");
 
-        res.status(500).json({
+    res.status(500).json({
 
-            error:
-                "Не удалось получить ответ от AI"
+        error: error.message || "Ошибка AI"
 
-        });
+    });
 
     }
 
