@@ -62,7 +62,52 @@ app.post("/api/chat", async (req, res) => {
 
     try {
 
-        const { message } = req.body;
+        const { message, language } = req.body;
+
+const currentLanguage = language || "ru";
+
+if (!message || typeof message !== "string") {
+    return res.status(400).json({
+        error: "Message is required"
+    });
+}
+
+const text = message
+    .toLowerCase()
+    .trim();
+
+// ======================================================
+// LIFE AI IDENTITY
+// ======================================================
+
+const identityRegex =
+    /^(кто ты|кто ты\?|ты кто|ты кто\?|как тебя зовут|как тебя зовут\?|что ты за ии|who are you|who are you\?|what are you|what are you\?|what is your name|what is your name\?|sen kimsan|sen kimsan\?)$/i;
+
+if (identityRegex.test(text)) {
+
+    let answer;
+
+    if (currentLanguage === "uz") {
+
+        answer =
+            "Men — Life AI ✦, o‘qish, ish, g‘oyalar va kundalik hayot uchun aqlli AI yordamchiman.";
+
+    } else if (currentLanguage === "en") {
+
+        answer =
+            "I am Life AI ✦, an intelligent AI assistant for studying, work, ideas and everyday life.";
+
+    } else {
+
+        answer =
+            "Я — Life AI ✦, умный AI-помощник для учёбы, работы, идей и повседневной жизни.";
+
+    }
+
+    return res.json({
+        answer: answer
+    });
+}
 
 
         // Проверка сообщения
