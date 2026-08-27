@@ -109,9 +109,9 @@ app.post("/api/chat", async (req, res) => {
         // ===============================
 
         if (
-            text.includes("кто создал life ai") ||
+            text.includes("кто создал Life ai") ||
             text.includes("кто создал лайф аи") ||
-            text.includes("кто владелец life ai") ||
+            text.includes("кто владелец Life ai") ||
             text.includes("кому принадлежит life ai")
         ) {
 
