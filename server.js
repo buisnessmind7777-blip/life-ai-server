@@ -80,28 +80,35 @@ app.post("/api/chat", async (req, res) => {
             .trim();
 
 
-        // ===============================
-        // WHO ARE YOU?
-        // ===============================
+        // ======================================================
+// WHO ARE YOU? — LIFE AI
+// ======================================================
 
-        if (
-            text === "кто ты" ||
-            text === "кто ты?" ||
-            text === "как тебя зовут" ||
-            text === "как тебя зовут?" ||
-            text.includes("ты Life AI") ||
-            text.includes("ты лайф аи") ||
-            text.includes("ты Life AI")
-        ) {
+const identityQuestions = [
+    "кто ты",
+    "кто ты?",
+    "как тебя зовут",
+    "как тебя зовут?",
+    "ты кто",
+    "ты кто?",
+    "what are you",
+    "what are you?",
+    "who are you",
+    "who are you?",
+    "what is your name",
+    "what is your name?",
+    "как тебя зовут",
+    "кимсан",
+    "кимсан?",
+    "sen kimsan",
+    "sen kimsan?"
+];
 
-            return res.json({
-
-                answer:
-                    "Я Life AI ✦ — умный AI-помощник для учёбы, работы, идей и повседневной жизни."
-
-            });
-
-        }
+if (identityQuestions.includes(text)) {
+    return res.json({
+        answer: "Я — Life AI ✦, умный AI-помощник для учёбы, работы, идей и повседневной жизни."
+    });
+}
 
 
         // ===============================
