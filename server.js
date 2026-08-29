@@ -1,48 +1,13 @@
 const express = require("express");
-const OpenAI = require("openai");
 
 const app = express();
 
 app.use(express.json());
 
 
-// ===============================
-// CORS
-// ===============================
-
-app.use((req, res, next) => {
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Content-Type"
-    );
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET,POST,OPTIONS"
-    );
-
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-
-    next();
-
-});
-
-
-// ===============================
-// OPENAI
-// ===============================
-
-const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
-
-
-// ===============================
+// ======================================================
 // SERVER CHECK
-// ===============================
+// ======================================================
 
 app.get("/", (req, res) => {
 
@@ -54,222 +19,36 @@ app.get("/", (req, res) => {
 });
 
 
-// ===============================
-// LIFE AI CHAT
-// ===============================
-
-app.post("/api/chat", async (req, res) => {
-
-    try {
-
-        const { message, language } = req.body;
-
-const currentLanguage = language || "ru";
-
-if (!message || typeof message !== "string") {
-    return res.status(400).json({
-        error: "Message is required"
-    });
-}
-
-const text = message
-    .toLowerCase()
-    .trim();
-
 // ======================================================
-// LIFE AI IDENTITY
+// AI CHAT
 // ======================================================
 
-const identityRegex =
-    /^(кто ты|кто ты\?|ты кто|ты кто\?|как тебя зовут|как тебя зовут\?|что ты за ии|who are you|who are you\?|what are you|what are you\?|what is your name|what is your name\?|sen kimsan|sen kimsan\?)$/i;
+app.post("/api/chat", (req, res) => {
 
-if (identityRegex.test(text)) {
+    const { message } = req.body;
 
-    let answer;
+    if (!message || typeof message !== "string") {
 
-    if (currentLanguage === "uz") {
-
-        answer =
-            "Men — Life AI ✦, o‘qish, ish, g‘oyalar va kundalik hayot uchun aqlli AI yordamchiman.";
-
-    } else if (currentLanguage === "en") {
-
-        answer =
-            "I am Life AI ✦, an intelligent AI assistant for studying, work, ideas and everyday life.";
-
-    } else {
-
-        answer =
-            "Я — Life AI ✦, умный AI-помощник для учёбы, работы, идей и повседневной жизни.";
-
-    }
-
-    return res.json({
-        answer: answer
-    });
-}
-
-
-        // Проверка сообщения
-        if (!message || typeof message !== "string") {
-
-            return res.status(400).json({
-                error: "Message is required"
-            });
-
-        }
-
-
-        const text = message
-            .toLowerCase()
-            .trim();
-
-
-        // ======================================================
-// WHO ARE YOU? — LIFE AI
-// ======================================================
-
-const identityQuestions = [
-    "кто ты",
-    "кто ты?",
-    "как тебя зовут",
-    "как тебя зовут?",
-    "ты кто",
-    "ты кто?",
-    "what are you",
-    "what are you?",
-    "who are you",
-    "who are you?",
-    "what is your name",
-    "what is your name?",
-    "как тебя зовут",
-    "кимсан",
-    "кимсан?",
-    "sen kimsan",
-    "sen kimsan?"
-];
-
-if (identityQuestions.includes(text)) {
-    return res.json({
-        answer: "Я — Life AI ✦, умный AI-помощник для учёбы, работы, идей и повседневной жизни."
-    });
-}
-
-
-        // ===============================
-        // OWNER
-        // ===============================
-
-        if (
-            text.includes("кто создал Life ai") ||
-            text.includes("кто создал лайф аи") ||
-            text.includes("кто владелец Life ai") ||
-            text.includes("кому принадлежит life ai")
-        ) {
-
-            return res.json({
-
-                answer:
-                    "Life AI создан Ибрагимовым Ибрагимом."
-
-            });
-
-        }
-
-
-        // ===============================
-        // AI
-        // ===============================
-
-        const response = await client.responses.create({
-
-            model: "gpt-5.6-luna",
-
-            instructions: `
-
-Ты — Life AI ✦.
-
-Твоё имя — Life AI.
-
-Ты являешься искусственным интеллектом Life AI.
-
-
-
-Если пользователь спрашивает:
-"Кто ты?"
-"Как тебя зовут?"
-
-
-Представляйся как Life AI.
-
-Отвечай естественно, дружелюбно и понятно.
-
-Life AI помогает пользователям:
-- учиться
-- получать ответы на вопросы
-- изучать языки
-- придумывать идеи
-- программировать
-- работать с текстами
-- узнавать информацию
-- решать повседневные задачи
-
-Если пользователь спрашивает о владельце Life AI,
-говори:
-
-"Life AI создан Ибрагимовым Ибрагимом."
-
-`,
-
-            input: message
-
-        });
-
-
-        // ===============================
-        // RESPONSE
-        // ===============================
-
-        res.json({
-
-            answer:
-                response.output_text
-
-        });
-
-
-    } catch (error) {
-
-        console.error("========== LIFE AI ERROR ==========");
-
-        console.error(error);
-
-        console.error("Message:", error.message);
-
-        console.error("Status:", error.status);
-
-        console.error("===================================");
-
-
-        res.status(500).json({
-
-            error:
-                "Не удалось получить ответ от Life AI."
-
+        return res.status(400).json({
+            error: "Message is required"
         });
 
     }
+
+    res.json({
+        answer:
+            "Life AI получил твой вопрос: " + message
+    });
 
 });
 
 
-// ===============================
+// ======================================================
 // PORT FOR RENDER
-// ===============================
+// ======================================================
 
 const PORT =
     process.env.PORT || 3000;
-
 
 app.listen(PORT, () => {
 
